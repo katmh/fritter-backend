@@ -169,23 +169,37 @@ within the schema. This tells us that the `content` field must have type `String
 
 ## API routes
 
-The following api routes have already been implemented for you (**Make sure to document all the routes that you have added.**):
+<details open>
+<summary>
+
+### GUI
+
+</summary>
 
 #### `GET /`
 
-This renders the `index.html` file that will be used to interact with the backend
+Render the `index.html` file, providing a GUI with which to interact with the API.
 
-#### `GET /api/freets` - Get all the freets
+</details>
+
+<details open>
+<summary>
+
+### Freets
+
+</summary>
+
+#### `GET /api/freets` - Get all freets
 
 **Returns**
 
-- An array of all freets sorted in descending order by date modified
+- An array of all freets sorted from most to least recently modified
 
-#### `GET /api/freets?author=USERNAME` - Get freets by author
+#### `GET /api/freets?author=USERNAME` - Get all freets of an author
 
 **Returns**
 
-- An array of freets created by user with username `author`
+- An array of freets created by the user with the username `author`
 
 **Throws**
 
@@ -197,6 +211,10 @@ This renders the `index.html` file that will be used to interact with the backen
 **Body**
 
 - `content` _{string}_ - The content of the freet
+- TODO: accommodate more things in request body
+- media content
+- is reply?
+- is retweet?
 
 **Returns**
 
@@ -207,7 +225,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 - `403` if the user is not logged in
 - `400` If the freet content is empty or a stream of empty spaces
-- `413` If the freet content is more than 140 characters long
+- `413` If the freet content is more than 140 characters long (TODO: update to 280)
 
 #### `DELETE /api/freets/:freetId?` - Delete an existing freet
 
@@ -221,7 +239,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not the author of the freet
 - `404` if the freetId is invalid
 
-#### `PUT /api/freets/:freetId?` - Update an existing freet
+#### `PUT /api/freets/:freetId?` - Update an existing freet (TODO: remove this)
 
 **Body**
 
@@ -239,6 +257,17 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not the author of the freet
 - `400` if the new freet content is empty or a stream of empty spaces
 - `413` if the new freet content is more than 140 characters long
+
+#### `POST /api/likes/:id` - Like the tweet with id `id`
+
+</details>
+
+<details open>
+<summary>
+
+### Authentication
+
+</summary>
 
 #### `POST /api/users/session` - Sign in user
 
@@ -268,6 +297,15 @@ This renders the `index.html` file that will be used to interact with the backen
 
 - `403` if user is not logged in
 
+</details>
+
+<details open>
+<summary>
+
+### Users
+
+</summary>
+
 #### `POST /api/users` - Create an new user account
 
 **Body**
@@ -286,9 +324,9 @@ This renders the `index.html` file that will be used to interact with the backen
 - `400` if username or password is in the wrong format
 - `409` if username is already in use
 
-#### `PUT /api/users` - Update a user's profile
+#### `PUT /api/users` - Update a user's data
 
-**Body** _(no need to add fields that are not being changed)_
+**Body**
 
 - `username` _{string}_ - The user's username
 - `password` _{string}_ - The user's password
@@ -313,3 +351,32 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `403` if the user is not logged in
+
+</details>
+
+<details open>
+<summary>
+
+### (Public) Profiles
+
+</summary>
+
+#### `PUT /api/profiles` - Update a user's public profile
+
+#### `GET /api/profiles` - Get the data needed to render a user's public profile
+
+#### `POST /api/follows/:username` - Follow the user with the username `username`
+
+#### `DELETE /api/follows/:username` - Unfollow the user with the username `username`
+
+### Read Later
+
+#### `PUT /api/readinglist/:freetId` - Add freet with id `freetId` to reading list
+
+#### `DELETE /api/readinglist/:freetId` - Remove freet with id `freetId` from reading list
+
+### Feed
+
+#### `GET /api/feed` - Get list of tweets to show on feed
+
+</details>
