@@ -9,14 +9,25 @@ export type User = {
   username: string;
   password: string;
   dateJoined: Date;
-  followers: Set<User>;
-  follows: Set<User>;
-  posts: Set<Freet>;
-  likes: Set<Freet>;
+  followers: Types.ObjectId[];
+  follows: Types.ObjectId[];
+  posts: Types.ObjectId[];
+  likes: Types.ObjectId[];
+};
+
+export type PopulatedUser = {
+  _id: Types.ObjectId;
+  username: string;
+  password: string;
+  dateJoined: Date;
+  followers: User[];
+  follows: User[];
+  posts: Freet[];
+  likes: Freet[];
 };
 
 // A schema defines shape of MongoDB document
-const UserSchema = new Schema({
+const UserSchema = new Schema<User>({
   username: {
     type: String,
     required: true

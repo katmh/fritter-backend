@@ -1,14 +1,13 @@
 import type {HydratedDocument, Types} from 'mongoose';
 import type {User} from './model';
 import UserModel from './model';
+import type {Freet} from '../freet/model';
 
 /**
- * This file contains a class with functionality to interact with users stored
- * in MongoDB, including adding, finding, updating, and deleting. Feel free to add
- * additional operations in this file.
+ * Class with methods for interfacing with the User MongoDB collection
  *
- * Note: HydratedDocument<User> is the output of the UserModel() constructor,
- * and contains all the information in User. https://mongoosejs.com/docs/typescript.html
+ * Note: HydratedDocument<User> is the output of the UserModel() constructor
+ * https://mongoosejs.com/docs/typescript.html
  */
 class UserCollection {
   /**
@@ -19,10 +18,16 @@ class UserCollection {
    * @return {Promise<HydratedDocument<User>>} - The newly created user
    */
   static async addOne(username: string, password: string): Promise<HydratedDocument<User>> {
-    const dateJoined = new Date();
-
-    const user = new UserModel({username, password, dateJoined});
-    await user.save(); // Saves user to MongoDB
+    const user = new UserModel({
+      username,
+      password,
+      dateJoined: new Date(),
+      followers: [],
+      follows: [],
+      posts: [],
+      likes: []
+    });
+    await user.save();
     return user;
   }
 
