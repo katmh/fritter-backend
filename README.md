@@ -1,82 +1,6 @@
 # Fritter
 
-Build your own not-quite-[Twitter](https://twitter.com/)!
-
-## Starter Code
-
-  This starter code implements users (with login/sessions), and freets so that you may focus on implementing your own design ideas.
-
-The project is structured as follows:
-
-- `index.ts` sets up the database connection and the Express server
-- `/freet` contains files related to freet concept
-  - `collection.ts` contains freet collection class to wrap around MongoDB database
-  - `middleware.ts` contains freet middleware
-  - `model.ts` contains definition of freet datatype
-  - `router.ts` contains backend freet routes
-  - `util.ts` contains freet utility functions for transforming data returned to the client
-- `/user` contains files related to user concept
-  - `collection.ts` contains user collection class to wrap around MongoDB database
-  - `middleware.ts` contains user middleware
-  - `model.ts` - contains definition of user datatype
-  - `router.ts` - contains backend user routes
-  - `util.ts` contains user utility functions for transforming data returned to the client
-- `/public` contains the code for the frontend (HTML/CSS/browser JS)
-
-## Installation
-
-Make a copy of this repository under your personal GitHub account by clicking the `Use this template` button. Make sure to enable the `Include all branches` option.
-
-If you did **not** take 6.031 in Fall 2021 or Spring 2022, to ensure that your machine has the necessary software for the assignment, please follow Steps 1, 2, 5, and 6 on [this page](https://web.mit.edu/6.031/www/sp22/getting-started/) from the [6.031 website](https://web.mit.edu/6.031/www/sp22/) (now 6.1020).
-
-### Setting up the demo branch (optional, but very helpful as a reference!)
-
-- Navigate to the root folder of your cloned repository.
-- Run `source demo-setup.sh` to set up the demo branches.
-- Check your local branches with `git branch`; you should have one new branch, with a new commit.
-  - `view-demo` demos how to extend functionality of a resource
-- If everything looks good, run `git push --all origin`. At this point, you should see the demo branch at `https://github.com/<username>/<repo-name>/branches` (and the `view-demo-code` branch can now be deleted!)
-- Now, if you navigate to the commit history of this branch (`https://github.com/<username>/<repo-name>/commits/<branch-name>`), you can click on the "demo:" commit and see exactly what we changed for each demo!
-
-### MongoDB Atlas setup
-
-Follow the instructions [here](https://docs.google.com/presentation/d/1HJ4Lz1a2IH5oKu21fQGYgs8G2irtMqnVI9vWDheGfKM/edit?usp=sharing) to add your fritter project to MongoDB Atlas.
-
-After following the instructions above, you should have copied a secret that looks something like `mongodb+srv://xxxxxx:xxxxxxxxx@cluster0.yc2imit.mongodb.net/?retryWrites=true&w=majority`. Note that this allows complete access to your database, so do not include it anywhere that is pushed to GitHub or any other publicly accessible location.
-
-To allow your local server to connect to the database you just created, create a file named `.env` in the project's root directory with the contents
-
-```
-MONGO_SRV=mongodb+srv://xxxxxx:xxxxxxxxx@cluster0.yc2imit.mongodb.net/?retryWrites=true&w=majority
-```
-
-where the secret is replaced with the one you obtained.
-
-### Post-Installation
-
-After finishing setup, we recommend testing both locally running the starter code, and deploying the code to Vercel, to make sure that both work before you run into issues later. The instructions can be found in the following two sections.
-
-## Running your code locally
-
-Firstly, open the terminal or command prompt and `cd` to the directory for this assignment. Before you make any changes, run the command `npm install` to install all the packages in `package.json`. You do not need to run this command every time you make any changes, unless you add a new package to the dependencies in `package.json`.
-
-Finally, to test your changes locally, run the command `npm start` in the terminal or command prompt and navigate to `localhost:3000` and interact with the frontend to test your routes.
-
-## Deployment to Vercel
-
-We will be using Vercel to host a publicly accessible deployment of your application.
-
-1. Create a fork of this repository through GitHub. This will create a repository in your GitHub account with a copy of the starter code. You'll use this copy to push your work and to deploy from.
-
-2. [Create a Vercel account](https://vercel.com) using your GitHub account.
-
-3. After you log in, go to the [project creation page](https://vercel.com/new) and select `Continue with GitHub` and give Vercel the permissions it asks for.
-
-4. Find the repository you just created and click `Import`. For the `Framework Preset`, choose `Other`. In the `Environment Variables` section, add an entry where `NAME` is `MONGO_SRV` and `VALUE` is your [MongoDB secret](#mongodb-atlas-setup).
-
-5. Click `Deploy` and you will get a link like `https://fritter-starter-abcd.vercel.app/` where you can access your site.
-
-Vercel will automatically deploy the latest version of your code whenever a push is made to the `main` branch.
+Building my own not-quite-[Twitter](https://twitter.com/) (for class)!
 
 ## Adding new concepts to Fritter
 
@@ -369,13 +293,27 @@ Render the `index.html` file, providing a GUI with which to interact with the AP
 
 #### `DELETE /api/follows/:username` - Unfollow the user with the username `username`
 
+</details>
+
+<details open>
+<summary>
+
 ### Read Later
+
+</summary>
 
 #### `PUT /api/readinglist/:freetId` - Add freet with id `freetId` to reading list
 
 #### `DELETE /api/readinglist/:freetId` - Remove freet with id `freetId` from reading list
 
+</details>
+
+<details open>
+<summary>
+
 ### Feed
+
+</summary>
 
 #### `GET /api/feed` - Get list of tweets to show on feed
 
