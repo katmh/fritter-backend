@@ -23,12 +23,11 @@ router.post(
   async (req: Request, res: Response) => {
     const followerId = req.session.userId as string;
     const followeeUsername = req.query.username as string;
-    // const {follower, followee} = await UserCollection.follow(followerId, followeeUsername);
-    const follower = await UserCollection.follow(followerId, followeeUsername);
+    const {follower, followee} = await UserCollection.follow(followerId, followeeUsername);
     res.status(200).json({
       message: 'Follow was successful.',
-      follower: util.constructUserResponse(follower)
-      // followee: util.constructUserResponse(followee)
+      follower: util.constructUserResponse(follower),
+      followee: util.constructUserResponse(followee)
     });
   }
 );

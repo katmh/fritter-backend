@@ -1,7 +1,11 @@
 import type {HydratedDocument, Types} from 'mongoose';
 import type {User} from './model';
 import UserModel from './model';
-import type {Freet} from '../freet/model';
+
+type FollowReturn = {
+  follower: HydratedDocument<User>;
+  followee: HydratedDocument<User>;
+};
 
 /**
  * Class with methods for interfacing with the User MongoDB collection
@@ -100,18 +104,12 @@ class UserCollection {
   /**
    * Have a user follow (denoted the follower) follow another user (the followee).
    */
-  static async follow(followerId: Types.ObjectId | string, followeeUsername: Types.ObjectId | string): Promise<HydratedDocument<User>> {
+  static async follow(followerId: Types.ObjectId | string, followeeUsername: string): Promise<FollowReturn> {
     const follower = await UserModel.findOne({_id: followerId});
-    const followee = await UserCollection.findOneByUsername(followeeUsername as string);
-    await follower.update(
-      // {followers: {$nin: followee._id}},
-      {$addToSet: followee._id} // Equivalent to $addToSet operator here
-    );
-    // await followee.update(
-    //   // {follows: {$nin: followerId}},
-    //   {$addToSet: followerId as Types.ObjectId}
-    // );
-    return follower;
+    const followee = await UserCollection.findOneByUsername(followeeUsername);
+    await follower.update({$addToSet: {followers: followee._id}});
+    await followee.update({$addToSet: {follows: followerId as Types.ObjectId}});
+    return {follower, followee};
   }
 }
 
