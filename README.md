@@ -276,6 +276,18 @@ Render the `index.html` file, providing a GUI with which to interact with the AP
 
 - `403` if the user is not logged in
 
+#### `POST /api/follow?username=username` - Follow the user with the username `username`
+
+**Returns**
+
+- An object representing the updated user who followed the followee
+
+**Throws**
+
+- `400` if the user making the request is already following the followee
+
+#### `DELETE /api/follow?username=username` - Unfollow the user with the username `username`
+
 </details>
 
 <details open>
@@ -288,10 +300,6 @@ Render the `index.html` file, providing a GUI with which to interact with the AP
 #### `PUT /api/profiles` - Update a user's public profile
 
 #### `GET /api/profiles` - Get the data needed to render a user's public profile
-
-#### `POST /api/follows/:username` - Follow the user with the username `username`
-
-#### `DELETE /api/follows/:username` - Unfollow the user with the username `username`
 
 </details>
 
