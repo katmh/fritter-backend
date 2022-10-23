@@ -103,12 +103,22 @@ class UserCollection {
 
   /**
    * Have a user follow (denoted the follower) follow another user (the followee).
+   *
+   * @param {Types.ObjectId | string} followerId - id of follower
+   * @param {string} followeeUsername - username of followee
+   * @return {Promise<FollowReturn>} - object containing updated follower and followee
    */
   static async follow(followerId: Types.ObjectId | string, followeeUsername: string): Promise<FollowReturn> {
-    const follower = await UserModel.findOne({_id: followerId});
-    const followee = await UserCollection.findOneByUsername(followeeUsername);
-    await follower.update({$addToSet: {followers: followee._id}});
-    await followee.update({$addToSet: {follows: followerId as Types.ObjectId}});
+    const followee = await UserModel.findOneAndUpdate(
+      {username: followeeUsername},
+      {$addToSet: {followers: followerId}},
+      {new: true} // Return modified document rather than original
+    );
+    const follower = await UserModel.findOneAndUpdate(
+      {_id: followerId},
+      {$addToSet: {follows: followee._id}},
+      {new: true}
+    );
     return {follower, followee};
   }
 }
