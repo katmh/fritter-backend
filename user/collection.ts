@@ -96,6 +96,21 @@ class UserCollection {
     const user = await UserModel.deleteOne({_id: userId});
     return user !== null;
   }
+
+  /**
+   * Have a user follow (denoted the follower) follow another user (the followee).
+   */
+  static async follow(followerId: Types.ObjectId | string, followeeUsername: Types.ObjectId | string): Promise<HydratedDocument<User>> {
+    const follower = await UserModel.findOne({_id: followerId});
+    const followee = await UserCollection.findOneByUsername(followeeUsername as string);
+    // TODO: if follower is already following followee, return
+    follower.follows.push(followee._id);
+    followee.followers.push(followerId as Types.ObjectId);
+    // TODO: parallelize
+    await follower.save();
+    await followee.save();
+    return follower;
+  }
 }
 
 export default UserCollection;

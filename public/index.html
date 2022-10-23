@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="/stylesheets/style.css">
   <script src="/scripts/freet.js"></script>
   <script src="/scripts/user.js"></script>
+  <script src="/scripts/follow.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
 
@@ -71,6 +72,15 @@
         <form id="sign-out">
           <h3>Sign Out</h3>
           <input type="submit" value="Sign out">
+        </form>
+
+        <form id="follow-user">
+          <h3>Follow User</h3>
+          <div>
+            <label for="username">Username (of user to follow):</label>
+            <input id="username" name="username">
+          </div>
+          <input type="submit" value="Follow User">
         </form>
 
         <form id="view-all-freets">
