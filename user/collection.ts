@@ -121,6 +121,27 @@ class UserCollection {
     );
     return {follower, followee};
   }
+
+  /**
+   * Have a user follow (denoted the follower) unfollow another user (the followee).
+   *
+   * @param {Types.ObjectId | string} followerId - id of follower
+   * @param {string} followeeUsername - username of followee
+   * @return {Promise<FollowReturn>} - object containing updated follower and followee
+   */
+  static async unfollow(followerId: Types.ObjectId | string, followeeUsername: string): Promise<FollowReturn> {
+    const followee = await UserModel.findOneAndUpdate(
+      {username: followeeUsername},
+      {$pull: {followers: followerId}},
+      {new: true} // Return modified document rather than original
+    );
+    const follower = await UserModel.findOneAndUpdate(
+      {_id: followerId},
+      {$pull: {follows: followee._id}},
+      {new: true}
+    );
+    return {follower, followee};
+  }
 }
 
 export default UserCollection;

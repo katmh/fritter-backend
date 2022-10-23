@@ -278,15 +278,19 @@ Render the `index.html` file, providing a GUI with which to interact with the AP
 
 #### `POST /api/follow?username=username` - Follow the user with the username `username`
 
+Idempotent. No error is thrown if the requesting user is already following the user `username`.
+
 **Returns**
 
-- An object representing the updated user who followed the followee
-
-**Throws**
-
-- `400` if the user making the request is already following the followee
+- An object containing the updated follower and followee
 
 #### `DELETE /api/follow?username=username` - Unfollow the user with the username `username`
+
+Idempotent. No error is thrown if the requesting user is not following the user `username`.
+
+**Returns**
+
+- An object containing the updated follower and followee
 
 </details>
 
