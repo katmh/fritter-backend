@@ -103,12 +103,14 @@ class UserCollection {
   static async follow(followerId: Types.ObjectId | string, followeeUsername: Types.ObjectId | string): Promise<HydratedDocument<User>> {
     const follower = await UserModel.findOne({_id: followerId});
     const followee = await UserCollection.findOneByUsername(followeeUsername as string);
-    // TODO: if follower is already following followee, return
-    follower.follows.push(followee._id);
-    followee.followers.push(followerId as Types.ObjectId);
-    // TODO: parallelize
-    await follower.save();
-    await followee.save();
+    await follower.update(
+      // {followers: {$nin: followee._id}},
+      {$addToSet: followee._id} // Equivalent to $addToSet operator here
+    );
+    // await followee.update(
+    //   // {follows: {$nin: followerId}},
+    //   {$addToSet: followerId as Types.ObjectId}
+    // );
     return follower;
   }
 }

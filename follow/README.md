@@ -1,0 +1,1 @@
+This folder does not have all the files that other concepts' folders have because Follow is not considered a full-fledged, distinct concept in my Fritter app. However, it exists because I wanted my RESTful API routes for following to live at `/api/follow` rather than `/api/user`. For the most part, the logic in this folder uses types, methods, etc from the User concept.
