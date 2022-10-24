@@ -7,7 +7,8 @@ export type Freet = {
   authorId: Types.ObjectId;
   timePosted: Date;
   textContent: string;
-  isReplyTo?: Types.ObjectId;
+  isReplyTo: Types.ObjectId | undefined;
+  replies: Types.ObjectId[];
 };
 
 export type PopulatedFreet = {
@@ -15,9 +16,12 @@ export type PopulatedFreet = {
   authorId: User;
   timePosted: Date;
   textContent: string;
-  isReplyTo?: Freet | PopulatedFreet;
+  isReplyTo: Freet | PopulatedFreet;
+  // Allowing `Freet`s in the array makes it so we're not forced to populate all levels of nesting
+  replies: Array<Freet | PopulatedFreet>;
 };
 
+// Require all properties as a convention
 const FreetSchema = new Schema<Freet>({
   authorId: {
     type: Schema.Types.ObjectId,
@@ -34,8 +38,14 @@ const FreetSchema = new Schema<Freet>({
   },
   isReplyTo: {
     type: Schema.Types.ObjectId,
-    ref: 'Freet'
-  }
+    ref: 'Freet',
+    required: true
+  },
+  replies: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Freet',
+    required: true
+  }]
 });
 
 const FreetModel = model<Freet>('Freet', FreetSchema);

@@ -19,7 +19,9 @@ class FreetCollection {
     const freet = new FreetModel({
       authorId,
       timePosted: date,
-      textContent
+      textContent,
+      isReplyTo: undefined,
+      replies: []
     });
     await freet.save();
     return freet.populate('authorId');
