@@ -9,6 +9,8 @@ export type Freet = {
   textContent: string;
   isReplyTo?: Types.ObjectId;
   replies: Types.ObjectId[];
+  isRetweetOf?: Types.ObjectId;
+  retweets: Types.ObjectId[];
 };
 
 export type PopulatedFreet = {
@@ -19,6 +21,8 @@ export type PopulatedFreet = {
   isReplyTo?: Freet | PopulatedFreet; // TODO: might be Freet only
   // Allowing `Freet`s in the array makes it so we're not forced to populate all levels of nesting
   replies: Array<Freet | PopulatedFreet>;
+  isRetweetOf?: Types.ObjectId;
+  retweets: Array<Freet | PopulatedFreet>;
 };
 
 const FreetSchema = new Schema<Freet>({
@@ -40,6 +44,15 @@ const FreetSchema = new Schema<Freet>({
     ref: 'Freet'
   },
   replies: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Freet',
+    required: true
+  }],
+  isRetweetOf: {
+    type: Schema.Types.ObjectId,
+    ref: 'Freet'
+  },
+  retweets: [{
     type: Schema.Types.ObjectId,
     ref: 'Freet',
     required: true
