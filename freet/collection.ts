@@ -44,7 +44,7 @@ class FreetCollection {
       const originalTweetId = new mongoose.Types.ObjectId(retweetOfId);
       freet.isRetweetOf = originalTweetId;
 
-      // TODO: enforce that user can only retweet a tweet once
+      // TODO: enforce that user can only retweet a tweet once?
       await FreetModel.findOneAndUpdate(
         {_id: originalTweetId},
         {$addToSet: {retweets: freet._id}}
