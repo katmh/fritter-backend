@@ -98,7 +98,10 @@ router.delete(
     freetValidator.isValidFreetModifier
   ],
   async (req: Request, res: Response) => {
-    await FreetCollection.deleteOne(req.params.freetId);
+    const userId = req.session.userId as string;
+    const {freetId} = req.params;
+    await FreetCollection.deleteOne(freetId);
+    await UserCollection.deleteFreet(userId, freetId);
     res.status(200).json({
       message: 'Your freet was deleted successfully.'
     });
