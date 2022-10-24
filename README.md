@@ -134,11 +134,9 @@ Render the `index.html` file, providing a GUI with which to interact with the AP
 
 **Body**
 
-- `content` _{string}_ - The content of the freet
-- TODO: accommodate more things in request body
-- media content
-- is reply?
-- is retweet?
+- `textContent` _{string}_ - The text content of the freet
+- `replyToId` _{string}_ - id of freet to reply to
+- `retweetOfId` _{string}_ - id of freet to refreet
 
 **Returns**
 
@@ -149,7 +147,7 @@ Render the `index.html` file, providing a GUI with which to interact with the AP
 
 - `403` if the user is not logged in
 - `400` If the freet content is empty or a stream of empty spaces
-- `413` If the freet content is more than 140 characters long (TODO: update to 280)
+- `413` If the freet content is more than 280 characters long
 
 #### `DELETE /api/freets/:freetId?` - Delete an existing freet
 
@@ -162,25 +160,6 @@ Render the `index.html` file, providing a GUI with which to interact with the AP
 - `403` if the user is not logged in
 - `403` if the user is not the author of the freet
 - `404` if the freetId is invalid
-
-#### `PUT /api/freets/:freetId?` - Update an existing freet (TODO: remove this)
-
-**Body**
-
-- `content` _{string}_ - The new content of the freet
-
-**Returns**
-
-- A success message
-- An object with the updated freet
-
-**Throws**
-
-- `403` if the user is not logged in
-- `404` if the freetId is invalid
-- `403` if the user is not the author of the freet
-- `400` if the new freet content is empty or a stream of empty spaces
-- `413` if the new freet content is more than 140 characters long
 
 #### `POST /api/likes/:id` - Like the tweet with id `id`
 
