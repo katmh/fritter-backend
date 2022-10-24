@@ -134,11 +134,8 @@ Render the `index.html` file, providing a GUI with which to interact with the AP
 
 **Body**
 
-- `content` _{string}_ - The content of the freet
-- TODO: accommodate more things in request body
-- media content
-- is reply?
-- is retweet?
+- `textContent` _{string}_ - The text content of the freet
+- `replyToId` _{string}_ - id of freet to reply to
 
 **Returns**
 
