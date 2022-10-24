@@ -157,6 +157,17 @@ class UserCollection {
       {new: true}
     );
   }
+
+  /**
+   * Remove a freet from a user's freets.
+   */
+  static async deleteFreet(userId: Types.ObjectId | string, freetId: Types.ObjectId | string) {
+    return UserModel.findOneAndUpdate(
+      {_id: userId},
+      {$pull: {posts: freetId}},
+      {new: true}
+    );
+  }
 }
 
 export default UserCollection;

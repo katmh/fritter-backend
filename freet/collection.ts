@@ -1,7 +1,12 @@
+import mongoose from 'mongoose';
 import type {HydratedDocument, Types} from 'mongoose';
+
+import UserCollection from '../user/collection';
+
 import type {Freet} from './model';
 import FreetModel from './model';
-import UserCollection from '../user/collection';
+
+const FIELDS_TO_POPULATE = ['authorId', 'isReplyTo'];
 
 /**
  * Class with methods for interfacing with the `freet` MongoDB collection.
@@ -14,15 +19,28 @@ class FreetCollection {
    * @param {string} textContent - The text content of the tweet
    * @return {Promise<HydratedDocument<Freet>>} - The newly created freet
    */
-  static async addOne(authorId: Types.ObjectId | string, textContent: string): Promise<HydratedDocument<Freet>> {
+  static async addOne(authorId: Types.ObjectId | string, textContent: string, replyToId: string | undefined): Promise<HydratedDocument<Freet>> {
     const date = new Date();
     const freet = new FreetModel({
       authorId,
       timePosted: date,
-      textContent
+      textContent,
+      replies: []
     });
+
+    if (replyToId) {
+      // If no replyToId argument is provided, then the created freet won't have the isReplyTo field set
+      const previousTweetId = new mongoose.Types.ObjectId(replyToId);
+      freet.isReplyTo = previousTweetId;
+      // Add newly created tweet to the replies array of previous tweet
+      await FreetModel.findOneAndUpdate(
+        {_id: previousTweetId},
+        {$addToSet: {replies: freet._id}}
+      );
+    }
+
     await freet.save();
-    return freet.populate('authorId');
+    return freet.populate(FIELDS_TO_POPULATE);
   }
 
   /**
@@ -32,7 +50,7 @@ class FreetCollection {
    * @return {Promise<HydratedDocument<Freet>> | Promise<null> } - The freet with the given freetId, if any
    */
   static async findOne(freetId: Types.ObjectId | string): Promise<HydratedDocument<Freet>> {
-    return FreetModel.findOne({_id: freetId}).populate('authorId');
+    return FreetModel.findOne({_id: freetId}).populate(FIELDS_TO_POPULATE);
   }
 
   /**
@@ -42,7 +60,7 @@ class FreetCollection {
    */
   static async findAll(): Promise<Array<HydratedDocument<Freet>>> {
     // Retrieves freets and sorts them from most to least recent
-    return FreetModel.find({}).sort({dateModified: -1}).populate('authorId');
+    return FreetModel.find({}).sort({dateModified: -1}).populate(FIELDS_TO_POPULATE);
   }
 
   /**
@@ -53,7 +71,7 @@ class FreetCollection {
    */
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<Freet>>> {
     const author = await UserCollection.findOneByUsername(username);
-    return FreetModel.find({authorId: author._id}).populate('authorId');
+    return FreetModel.find({authorId: author._id}).populate(FIELDS_TO_POPULATE);
   }
 
   /**

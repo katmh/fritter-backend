@@ -70,12 +70,12 @@ router.post(
   ],
   async (req: Request, res: Response) => {
     const userId = req.session.userId as string;
-    const freet = await FreetCollection.addOne(userId, req.body.content);
+    const freet = await FreetCollection.addOne(userId, req.body.content, req.body.replyToId);
     await UserCollection.addFreet(userId, freet._id);
 
     res.status(201).json({
       message: 'Your freet was created successfully.',
-      freet: util.constructFreetResponse(freet)
+      freet: await util.constructFreetResponse(freet)
     });
   }
 );
@@ -98,7 +98,10 @@ router.delete(
     freetValidator.isValidFreetModifier
   ],
   async (req: Request, res: Response) => {
-    await FreetCollection.deleteOne(req.params.freetId);
+    const userId = req.session.userId as string;
+    const {freetId} = req.params;
+    await FreetCollection.deleteOne(freetId);
+    await UserCollection.deleteFreet(userId, freetId);
     res.status(200).json({
       message: 'Your freet was deleted successfully.'
     });
