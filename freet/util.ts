@@ -8,7 +8,7 @@ type FreetResponse = {
   author: string;
   timePosted: string;
   textContent: string;
-  isReplyTo: FreetResponse | undefined;
+  isReplyTo?: FreetResponse;
   replies: Array<Freet | PopulatedFreet>; // TODO
 };
 
@@ -33,11 +33,12 @@ const constructFreetResponse = async (freet: HydratedDocument<Freet> | HydratedD
     ...freet.toObject({versionKey: false})
   };
 
-  // Just return username of author
+  // We will return username of author
   const {username} = freetCopy.authorId;
   delete freetCopy.authorId;
 
-  // Recursively construct API response object for freet that this freet replies to
+  // If this freet is a reply, we will recursively construct an API response object
+  // representing the freet that this freet replies to
   const previousTweet = freetCopy.isReplyTo ? await FreetCollection.findOne(freetCopy.isReplyTo._id) : undefined;
 
   return {
@@ -45,7 +46,7 @@ const constructFreetResponse = async (freet: HydratedDocument<Freet> | HydratedD
     _id: freetCopy._id.toString(),
     author: username,
     timePosted: formatDate(freet.timePosted),
-    isReplyTo: await constructFreetResponse(previousTweet)
+    isReplyTo: previousTweet ? await constructFreetResponse(previousTweet) : undefined
   };
 };
 

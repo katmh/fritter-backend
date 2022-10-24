@@ -7,7 +7,7 @@ export type Freet = {
   authorId: Types.ObjectId;
   timePosted: Date;
   textContent: string;
-  isReplyTo: Types.ObjectId | undefined;
+  isReplyTo?: Types.ObjectId;
   replies: Types.ObjectId[];
 };
 
@@ -16,17 +16,16 @@ export type PopulatedFreet = {
   authorId: User;
   timePosted: Date;
   textContent: string;
-  isReplyTo: Freet | PopulatedFreet;
+  isReplyTo?: Freet | PopulatedFreet; // TODO: might be Freet only
   // Allowing `Freet`s in the array makes it so we're not forced to populate all levels of nesting
   replies: Array<Freet | PopulatedFreet>;
 };
 
-// Require all properties as a convention
 const FreetSchema = new Schema<Freet>({
   authorId: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'User'
+    ref: 'User' // Attribute tells mongoose what model to use during population
   },
   timePosted: {
     type: Date,
@@ -38,8 +37,7 @@ const FreetSchema = new Schema<Freet>({
   },
   isReplyTo: {
     type: Schema.Types.ObjectId,
-    ref: 'Freet',
-    required: true
+    ref: 'Freet'
   },
   replies: [{
     type: Schema.Types.ObjectId,
