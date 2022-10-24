@@ -7,6 +7,7 @@ export type Freet = {
   authorId: Types.ObjectId;
   timePosted: Date;
   textContent: string;
+  isReplyTo?: Types.ObjectId;
 };
 
 export type PopulatedFreet = {
@@ -14,6 +15,7 @@ export type PopulatedFreet = {
   authorId: User;
   timePosted: Date;
   textContent: string;
+  isReplyTo?: Freet | PopulatedFreet;
 };
 
 const FreetSchema = new Schema<Freet>({
@@ -29,6 +31,10 @@ const FreetSchema = new Schema<Freet>({
   textContent: {
     type: String,
     required: true
+  },
+  isReplyTo: {
+    type: Schema.Types.ObjectId,
+    ref: 'Freet'
   }
 });
 

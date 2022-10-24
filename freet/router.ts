@@ -75,7 +75,7 @@ router.post(
 
     res.status(201).json({
       message: 'Your freet was created successfully.',
-      freet: util.constructFreetResponse(freet)
+      freet: await util.constructFreetResponse(freet)
     });
   }
 );
