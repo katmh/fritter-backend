@@ -30,9 +30,13 @@ class FreetCollection {
 
     if (replyToId) {
       // If no replyToId argument is provided, then the created freet won't have the isReplyTo field set
-      freet.isReplyTo = new mongoose.Types.ObjectId(replyToId);
-
-      // TODO: add created tweet to replies array of previous tweet
+      const previousTweetId = new mongoose.Types.ObjectId(replyToId);
+      freet.isReplyTo = previousTweetId;
+      // Add newly created tweet to the replies array of previous tweet
+      await FreetModel.findOneAndUpdate(
+        {_id: previousTweetId},
+        {$addToSet: {replies: freet._id}}
+      );
     }
 
     await freet.save();
