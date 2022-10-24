@@ -1,7 +1,10 @@
-import type {NextFunction, Request, Response} from 'express';
 import express from 'express';
-import FreetCollection from './collection';
+import type {NextFunction, Request, Response} from 'express';
+
+import UserCollection from '../user/collection';
 import * as userValidator from '../user/middleware';
+
+import FreetCollection from './collection';
 import * as freetValidator from '../freet/middleware';
 import * as util from './util';
 
@@ -66,8 +69,9 @@ router.post(
     freetValidator.isValidFreetContent
   ],
   async (req: Request, res: Response) => {
-    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const userId = req.session.userId as string;
     const freet = await FreetCollection.addOne(userId, req.body.content);
+    await UserCollection.addFreet(userId, freet._id);
 
     res.status(201).json({
       message: 'Your freet was created successfully.',

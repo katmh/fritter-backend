@@ -142,6 +142,21 @@ class UserCollection {
     );
     return {follower, followee};
   }
+
+  /**
+   * Add a tweet to a user's freets.
+   *
+   * @param userId - id of freet author
+   * @param freetId - id of freet
+   * @returns - updated user
+   */
+  static async addFreet(userId: Types.ObjectId | string, freetId: Types.ObjectId | string) {
+    return UserModel.findOneAndUpdate(
+      {_id: userId},
+      {$addToSet: {posts: freetId}},
+      {new: true}
+    );
+  }
 }
 
 export default UserCollection;
