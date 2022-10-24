@@ -8,9 +8,9 @@ type FreetResponse = {
   author: string;
   timePosted: string;
   textContent: string;
-  isReplyTo?: FreetResponse;
+  isReplyTo?: string | FreetResponse;
   replies: Array<Freet | PopulatedFreet>; // TODO
-  isRetweetOf?: FreetResponse;
+  isRetweetOf?: string | FreetResponse;
 };
 
 /**
@@ -29,29 +29,37 @@ const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:
  * @returns {FreetResponse} - The freet object formatted for the frontend
  */
 const constructFreetResponse = async (freet: HydratedDocument<Freet> | HydratedDocument<PopulatedFreet>): Promise<FreetResponse> => {
-  // Make a copy without the __v property
-  const freetCopy: PopulatedFreet = {
-    ...freet.toObject({versionKey: false})
+  const freetResponseHelper = async (freet: HydratedDocument<Freet> | HydratedDocument<PopulatedFreet>, isRecursiveCall: boolean): Promise<FreetResponse> => {
+    // Make a copy without the __v property
+    const freetCopy: PopulatedFreet = {
+      ...freet.toObject({versionKey: false})
+    };
+
+    // We will return username of author
+    const {username} = freetCopy.authorId;
+    delete freetCopy.authorId;
+
+    // If this freet is a reply, we will recursively construct an API response object
+    // representing the freet that this freet replies to. Only one level of recursion.
+    // Same goes for retweet.
+    const previousTweet = freetCopy.isReplyTo ? await FreetCollection.findOne(freetCopy.isReplyTo._id) : undefined;
+    const originalTweet = freetCopy.isRetweetOf ? await FreetCollection.findOne(freetCopy.isRetweetOf._id) : undefined;
+
+    return {
+      ...freetCopy,
+      _id: freetCopy._id.toString(),
+      author: username,
+      timePosted: formatDate(freet.timePosted),
+      isReplyTo: previousTweet
+        ? (isRecursiveCall ? previousTweet._id.toString() : await freetResponseHelper(previousTweet, true))
+        : undefined,
+      isRetweetOf: originalTweet
+        ? (isRecursiveCall ? originalTweet._id.toString() : await freetResponseHelper(originalTweet, true))
+        : undefined
+    };
   };
 
-  // We will return username of author
-  const {username} = freetCopy.authorId;
-  delete freetCopy.authorId;
-
-  // If this freet is a reply, we will recursively construct an API response object
-  // representing the freet that this freet replies to
-  // Same goes for retweet
-  const previousTweet = freetCopy.isReplyTo ? await FreetCollection.findOne(freetCopy.isReplyTo._id) : undefined;
-  const originalTweet = freetCopy.isRetweetOf ? await FreetCollection.findOne(freetCopy.isRetweetOf._id) : undefined;
-
-  return {
-    ...freetCopy,
-    _id: freetCopy._id.toString(),
-    author: username,
-    timePosted: formatDate(freet.timePosted),
-    isReplyTo: previousTweet ? await constructFreetResponse(previousTweet) : undefined,
-    isRetweetOf: originalTweet ? await constructFreetResponse(originalTweet) : undefined
-  };
+  return freetResponseHelper(freet, false);
 };
 
 export {

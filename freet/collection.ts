@@ -26,7 +26,8 @@ class FreetCollection {
       timePosted: date,
       textContent,
       replies: [],
-      retweets: []
+      retweets: [],
+      isStartOfThread: false
     });
 
     if (replyToId) {
@@ -34,10 +35,31 @@ class FreetCollection {
       const previousTweetId = new mongoose.Types.ObjectId(replyToId);
       freet.isReplyTo = previousTweetId;
       // Add newly created tweet to the replies array of previous tweet
-      await FreetModel.findOneAndUpdate(
+      const previousTweet = await FreetModel.findOneAndUpdate(
         {_id: previousTweetId},
-        {$addToSet: {replies: freet._id}}
+        {$addToSet: {replies: freet._id}},
+        {new: true}
       );
+
+      // THREADS
+      if (previousTweet.authorId.toString() === authorId) { // All freets in thread have same author
+        // **Handle case where newly created tweet continues an existing thread**
+        // If previous tweet has a value for `startOfThread` (i.e. is part of a thread),
+        // then newly created tweet inherits this value
+        if (previousTweet.startOfThread) {
+          freet.startOfThread = previousTweet.startOfThread;
+        }
+
+        // **Handle case where newly created tweet creates a thread** (i.e. it'd be the 2nd tweet in a thread)
+        // If previous tweet is not a reply, then previous tweet becomes the start of a thread
+        if (!previousTweet.isReplyTo) {
+          previousTweet.isStartOfThread = true;
+          freet.startOfThread = previousTweet._id;
+        }
+
+        await freet.save();
+        await previousTweet.save();
+      }
     }
 
     if (retweetOfId) {
