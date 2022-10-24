@@ -70,7 +70,7 @@ router.post(
   ],
   async (req: Request, res: Response) => {
     const userId = req.session.userId as string;
-    const freet = await FreetCollection.addOne(userId, req.body.content, req.body.replyToId);
+    const freet = await FreetCollection.addOne(userId, req.body.content, req.body.replyToId, req.body.retweetOfId);
     await UserCollection.addFreet(userId, freet._id);
 
     res.status(201).json({

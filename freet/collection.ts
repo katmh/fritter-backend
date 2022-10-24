@@ -6,7 +6,7 @@ import UserCollection from '../user/collection';
 import type {Freet} from './model';
 import FreetModel from './model';
 
-const FIELDS_TO_POPULATE = ['authorId', 'isReplyTo'];
+const FIELDS_TO_POPULATE = ['authorId', 'isReplyTo', 'isRetweetOf'];
 
 /**
  * Class with methods for interfacing with the `freet` MongoDB collection.
@@ -19,13 +19,14 @@ class FreetCollection {
    * @param {string} textContent - The text content of the tweet
    * @return {Promise<HydratedDocument<Freet>>} - The newly created freet
    */
-  static async addOne(authorId: Types.ObjectId | string, textContent: string, replyToId: string | undefined): Promise<HydratedDocument<Freet>> {
+  static async addOne(authorId: Types.ObjectId | string, textContent: string, replyToId: string | undefined, retweetOfId: string | undefined): Promise<HydratedDocument<Freet>> {
     const date = new Date();
     const freet = new FreetModel({
       authorId,
       timePosted: date,
       textContent,
-      replies: []
+      replies: [],
+      retweets: []
     });
 
     if (replyToId) {
@@ -36,6 +37,17 @@ class FreetCollection {
       await FreetModel.findOneAndUpdate(
         {_id: previousTweetId},
         {$addToSet: {replies: freet._id}}
+      );
+    }
+
+    if (retweetOfId) {
+      const originalTweetId = new mongoose.Types.ObjectId(retweetOfId);
+      freet.isRetweetOf = originalTweetId;
+
+      // TODO: enforce that user can only retweet a tweet once
+      await FreetModel.findOneAndUpdate(
+        {_id: originalTweetId},
+        {$addToSet: {retweets: freet._id}}
       );
     }
 
