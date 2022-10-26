@@ -93,6 +93,8 @@ within the schema. This tells us that the `content` field must have type `String
 
 ## API routes
 
+**Note for A5 submission: Unfortunately, not all of these have been implemented yet!**
+
 <details open>
 <summary>
 
@@ -109,15 +111,16 @@ Render the `index.html` file, providing a GUI with which to interact with the AP
 <details open>
 <summary>
 
-### Freets
+### Freet
 
 </summary>
 
-#### `GET /api/freets` - Get all freets
+#### `GET /api/freets?n=NUMBER` - Get latest n freets from users you follow
 
 **Returns**
 
-- An array of all freets sorted from most to least recently modified
+- An array of the latest (according to time posted) n freets from users followed by the logged in user who made the request
+- If a value for n is not provided, n defaults to 100
 
 #### `GET /api/freets?author=USERNAME` - Get all freets of an author
 
@@ -168,7 +171,7 @@ Render the `index.html` file, providing a GUI with which to interact with the AP
 <details open>
 <summary>
 
-### Authentication
+### User
 
 </summary>
 
@@ -199,15 +202,6 @@ Render the `index.html` file, providing a GUI with which to interact with the AP
 **Throws**
 
 - `403` if user is not logged in
-
-</details>
-
-<details open>
-<summary>
-
-### Users
-
-</summary>
 
 #### `POST /api/users` - Create an new user account
 
@@ -255,7 +249,16 @@ Render the `index.html` file, providing a GUI with which to interact with the AP
 
 - `403` if the user is not logged in
 
-#### `POST /api/follow?username=username` - Follow the user with the username `username`
+</details>
+
+<details open>
+<summary>
+
+### Follow
+
+</summary>
+
+#### `POST /api/follows/:username` - Have requesting user follow the user with the username `username`
 
 Idempotent. No error is thrown if the requesting user is already following the user `username`.
 
@@ -263,26 +266,56 @@ Idempotent. No error is thrown if the requesting user is already following the u
 
 - An object containing the updated follower and followee
 
-#### `DELETE /api/follow?username=username` - Unfollow the user with the username `username`
+**Throws**
 
-Idempotent. No error is thrown if the requesting user is not following the user `username`.
+- `403` if user is not logged in
+- `404` if no user with username `username` found
+
+#### `DELETE /api/follows/username` - Unfollow the user with the username `username`
+
+Idempotent. No error is thrown if the requesting user is already not following the user `username`.
 
 **Returns**
 
 - An object containing the updated follower and followee
 
-</details>
+**Throws**
+
+- `403` if user is not logged in
+- `404` if no user with username `username` found
+
+**Returns**
+
+- An object containing the updated follower and followee
+
+</detail>
 
 <details open>
 <summary>
 
-### (Public) Profiles
+### Profile
 
 </summary>
 
 #### `PUT /api/profiles` - Update a user's public profile
 
+**Returns**
+
+- The updated profile
+
+**Throws**
+
+- `403` if user is not logged in
+
 #### `GET /api/profiles` - Get the data needed to render a user's public profile
+
+**Returns**
+
+- The profile information
+
+**Throws**
+
+- `403` if user is not logged in
 
 </details>
 
@@ -296,16 +329,5 @@ Idempotent. No error is thrown if the requesting user is not following the user 
 #### `PUT /api/readinglist/:freetId` - Add freet with id `freetId` to reading list
 
 #### `DELETE /api/readinglist/:freetId` - Remove freet with id `freetId` from reading list
-
-</details>
-
-<details open>
-<summary>
-
-### Feed
-
-</summary>
-
-#### `GET /api/feed` - Get list of tweets to show on feed
 
 </details>
