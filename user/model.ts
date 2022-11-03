@@ -40,10 +40,26 @@ const UserSchema = new Schema<User>({
     type: Date,
     required: true
   },
-  followers: [{type: Schema.Types.ObjectId, ref: 'User'}],
-  follows: [{type: Schema.Types.ObjectId, ref: 'User'}],
-  posts: [{type: Schema.Types.ObjectId, ref: 'Freet'}],
-  likes: [{type: Schema.Types.ObjectId, ref: 'Freet'}]
+  followers: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }],
+  follows: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }],
+  posts: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Freet',
+    required: true
+  }],
+  likes: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Freet',
+    required: true
+  }]
 });
 
 // A model is a constructor created from a schema
