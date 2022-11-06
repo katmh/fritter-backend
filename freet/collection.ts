@@ -6,7 +6,7 @@ import UserCollection from '../user/collection';
 import type {Freet} from './model';
 import FreetModel from './model';
 
-const FIELDS_TO_POPULATE = ['authorId', 'isReplyTo', 'isRetweetOf'];
+const FIELDS_TO_POPULATE = ['author', 'isReplyTo', 'isRetweetOf'];
 
 /**
  * Class with methods for interfacing with the `freet` MongoDB collection.
@@ -15,16 +15,17 @@ class FreetCollection {
   /**
    * Add a freet to the collection
    *
-   * @param {string} authorId - The id of the author of the freet
+   * @param {string} author - The id of the author of the freet
    * @param {string} textContent - The text content of the tweet
    * @return {Promise<HydratedDocument<Freet>>} - The newly created freet
    */
-  static async addOne(authorId: Types.ObjectId | string, textContent: string, replyToId: string | undefined, retweetOfId: string | undefined): Promise<HydratedDocument<Freet>> {
-    const date = new Date();
+  static async addOne(author: Types.ObjectId | string, textContent: string, replyToId: string | undefined, retweetOfId: string | undefined): Promise<HydratedDocument<Freet>> {
     const freet = new FreetModel({
-      authorId,
-      timePosted: date,
+      author,
+      timePosted: new Date(),
       textContent,
+      isDeleted: false,
+      likes: [],
       replies: [],
       retweets: [],
       isStartOfThread: false
@@ -42,7 +43,7 @@ class FreetCollection {
       );
 
       // THREADS
-      if (previousTweet.authorId.toString() === authorId) { // All freets in thread have same author
+      if (previousTweet.author.toString() === author) { // All freets in thread have same author
         // **Handle case where newly created tweet continues an existing thread**
         // If previous tweet has a value for `startOfThread` (i.e. is part of a thread),
         // then newly created tweet inherits this value

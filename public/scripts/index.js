@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 // Show an object on the screen.
 function showObject(obj) {
   const pre = document.getElementById('response');
@@ -39,7 +41,19 @@ const formsAndHandlers = {
   'view-all-freets': viewAllFreets,
   'view-freets-by-author': viewFreetsByAuthor,
   'create-freet': createFreet,
-  'delete-freet': deleteFreet
+  'delete-freet': deleteFreet,
+  'add-to-reading-list': addToReadingList,
+  'remove-from-reading-list': removeFromReadingList,
+  'clear-reading-list': clearReadingList,
+  'create-cm': createCM,
+  'edit-cm': editCM,
+  'add-freets-to-cm': addFreetsToCM,
+  'remove-freets-from-cm': removeFreetsFromCM,
+  'delete-cm': deleteCM,
+  'view-all-likes': viewLikes,
+  'like-freet': likeFreet,
+  'unlike-freet': unlikeFreet,
+  'edit-profile': editProfile
 };
 
 // Attach handlers to forms

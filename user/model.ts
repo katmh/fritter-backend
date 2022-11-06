@@ -13,6 +13,7 @@ export type User = {
   follows: Types.ObjectId[];
   posts: Types.ObjectId[];
   likes: Types.ObjectId[];
+  readingList: Types.ObjectId[];
 };
 
 export type PopulatedUser = {
@@ -24,6 +25,7 @@ export type PopulatedUser = {
   follows: User[];
   posts: Freet[];
   likes: Freet[];
+  readingList: Freet[];
 };
 
 // A schema defines shape of MongoDB document
@@ -56,6 +58,11 @@ const UserSchema = new Schema<User>({
     required: true
   }],
   likes: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Freet',
+    required: true
+  }],
+  readingList: [{
     type: Schema.Types.ObjectId,
     ref: 'Freet',
     required: true

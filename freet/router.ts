@@ -3,7 +3,6 @@ import type {NextFunction, Request, Response} from 'express';
 
 import UserCollection from '../user/collection';
 import * as userValidator from '../user/middleware';
-
 import FreetCollection from './collection';
 import * as freetValidator from '../freet/middleware';
 import * as util from './util';

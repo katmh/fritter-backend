@@ -6,8 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/stylesheets/style.css">
   <script src="/scripts/freet.js"></script>
+  <script src="/scripts/likes.js"></script>
   <script src="/scripts/user.js"></script>
   <script src="/scripts/follow.js"></script>
+  <script src="/scripts/readinglist.js"></script>
+  <script src="/scripts/collaborativemoments.js"></script>
+  <script src="/scripts/profiles.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
 
@@ -33,6 +37,19 @@
           <input type="submit" value="Create User">
         </form>
 
+        <form id="sign-in">
+          <h3>Sign In</h3>
+          <div>
+            <label for="username">Username:</label>
+            <input id="username" name="username">
+          </div>
+          <div>
+            <label for="password">Password:</label>
+            <input id="password" name="password">
+          </div>
+          <input type="submit" value="Sign In">
+        </form>
+
         <form id="delete-user">
           <h3>Delete User</h3>
           <input type="submit" value="Delete User">
@@ -56,17 +73,26 @@
           <input type="submit" value="Change Password">
         </form>
 
-        <form id="sign-in">
-          <h3>Sign In</h3>
+        <form id="edit-profile">
+          <h3>Edit Profile</h3>
+          <p>Leave an input blank to leave its corresponding field unchanged. This means that from this GUI you can't clear a field, but programmatically one would be able to do that by passing a blank string.</p>
           <div>
-            <label for="username">Username:</label>
-            <input id="username" name="username">
+            <label for="displayName">Display Name:</label>
+            <input id="displayName" name="displayName">
           </div>
           <div>
-            <label for="password">Password:</label>
-            <input id="password" name="password">
+            <label for="bio">Bio:</label>
+            <input id="bio" name="bio">
           </div>
-          <input type="submit" value="Sign In">
+          <div>
+            <label for="location">Location:</label>
+            <input id="location" name="location">
+          </div>
+          <div>
+            <label for="profileColor">Profile Color:</label>
+            <input id="profileColor" name="profileColor">
+          </div>
+          <input type="submit" value="Edit Profile">
         </form>
 
         <form id="sign-out">
@@ -93,9 +119,9 @@
         </form>
 
         <form id="view-all-freets">
-            <h3>View All Freets</h3>
-            <input type="submit" value="View All Freets">
-          </form>
+          <h3>View All Freets</h3>
+          <input type="submit" value="View All Freets">
+        </form>
 
         <form id="view-freets-by-author">
           <h3>View Freets By Author</h3>
@@ -111,12 +137,67 @@
           <div>
             <label for="content">Content:</label>
             <textarea id="content" name="content"></textarea>
+          </div>
+          <div>
             <label for="replyToId">Reply to (tweet ID):</label>
             <input id="replyToId" name="replyToId">
+          </div>
+          <div>
             <label for="retweetOfId">Retweet (tweet ID):</label>
             <input id="retweetOfId" name="retweetOfId">
           </div>
+          <div>
+            <label for="mentions">Mention (CM ID):</label>
+            <input id="mentions" name="mentions">
+          </div>
           <input type="submit" value="Create Freet">
+        </form>
+
+        <form id="view-all-likes">
+          <h3>View All Liked Freets</h3>
+          <input type="submit" value="View All Liked Freets">
+        </form>
+
+        <form id="like-freet">
+          <h3>Like Freet</h3>
+          <div>
+            <label for="id">Tweet ID:</label>
+            <input id="id" name="id">
+          </div>
+          <input type="submit" value="Like Freet">
+        </form>
+
+        <form id="unlike-freet">
+          <h3>Unlike Freet</h3>
+          <div>
+            <label for="id">Tweet ID:</label>
+            <input id="id" name="id">
+          </div>
+          <input type="submit" value="Unlike Freet">
+        </form>
+
+        <form id="add-to-reading-list">
+          <h3>Add Freet to Reading List</h3>
+          <div>
+            <label for="id">Tweet ID:</label>
+            <input id="id" name="id">
+          </div>
+          <input type="submit" value="Add Freet to Reading List">
+        </form>
+
+        <form id="remove-from-reading-list">
+          <h3>Remove Freet from Reading List</h3>
+          <div>
+            <label for="id">Tweet ID:</label>
+            <input id="id" name="id">
+          </div>
+          <input type="submit" value="Remove Freet from Reading List">
+        </form>
+
+        <form id="clear-reading-list">
+          <h3>Clear Reading List</h3>
+          <p>I.e. remove all items from reading list</p>
+          <input type="submit" value="Clear Reading List">
         </form>
 
         <form id="delete-freet">
@@ -126,6 +207,88 @@
             <input id="id" name="id">
           </div>
           <input type="submit" value="Delete Freet">
+        </form>
+
+        <form id="create-cm">
+          <h3>Create Collaborative Moment</h3>
+          <div>
+            <label for="title">Title:</label>
+            <input id="title" name="title">
+          </div>
+          <div>
+            <label for="description">Description:</label>
+            <input id="description" name="description">
+          </div>
+          <div>
+            <label for="admins">Admins (comma-separated usernames):</label>
+            <input id="admins" name="admins">
+          </div>
+          <div>
+            <label for="editors">Editors (comma-separated usernames):</label>
+            <input id="editors" name="editors">
+          </div>
+          <input type="submit" value="Create Collaborative Moment">
+        </form>
+
+        <form id="edit-cm">
+          <h3>Edit Collaborative Moment Details</h3>
+          <p>Leave an input blank to leave its corresponding field unchanged. This means that from this GUI you can't clear a field, but programmatically one would be able to do that by passing a blank string.</p>
+          <div>
+            <label for="id">CM ID:</label>
+            <input id="id" name="id">
+          </div>
+          <div>
+            <label for="title">Title:</label>
+            <input id="title" name="title">
+          </div>
+          <div>
+            <label for="description">Description:</label>
+            <input id="description" name="description">
+          </div>
+          <div>
+            <label for="admins">Admins (comma-separated usernames):</label>
+            <input id="admins" name="admins">
+          </div>
+          <div>
+            <label for="editors">Editors (comma-separated usernames):</label>
+            <input id="editors" name="editors">
+          </div>
+          <input type="submit" value="Edit Collaborative Moment">
+        </form>
+
+        <form id="add-freets-to-cm">
+          <h3>Add Freets to Collaborative Moment</h3>
+          <div>
+            <label for="id">CM ID:</label>
+            <input id="id" name="id">
+          </div>
+          <div>
+            <label for="freets">Freet (comma-separated IDs):</label>
+            <input id="freets" name="freets">
+          </div>
+          <input type="submit" value="Add Freets">
+        </form>
+
+        <form id="remove-freets-from-cm">
+          <h3>Remove Freets from Collaborative Moment</h3>
+          <div>
+            <label for="id">CM ID:</label>
+            <input id="id" name="id">
+          </div>
+          <div>
+            <label for="freets">Freet (comma-separated IDs):</label>
+            <input id="freets" name="freets">
+          </div>
+          <input type="submit" value="Remove Freets">
+        </form>
+
+        <form id="delete-cm">
+          <h3>Delete Collaborative Moment</h3>
+          <div>
+            <label for="id">ID:</label>
+            <input id="id" name="id">
+          </div>
+          <input type="submit" value="Delete Collaborative Moment">
         </form>
       </div>
     </section>

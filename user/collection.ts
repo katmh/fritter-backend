@@ -168,6 +168,39 @@ class UserCollection {
       {new: true}
     );
   }
+
+  /**
+   * Add freet with ID `freetId` to reading list of user with ID `userId`
+   */
+  static async addReadingListEntry(userId: Types.ObjectId | string, freetId: Types.ObjectId | string) {
+    return UserModel.findOneAndUpdate(
+      {_id: userId},
+      {$addToSet: {readingList: freetId}},
+      {new: true}
+    ).populate('readingList');
+  }
+
+  /**
+   * Remove freet with ID `freetId` from reading list of user with ID `userId`
+   */
+  static async removeReadingListEntry(userId: Types.ObjectId | string, freetId: Types.ObjectId | string) {
+    return UserModel.findOneAndUpdate(
+      {_id: userId},
+      {$pull: {readingList: freetId}},
+      {new: true}
+    ).populate('readingList');
+  }
+
+  /**
+   * Remove all entries from reading list of user with ID `userId`
+   */
+  static async clearReadingList(userId: Types.ObjectId | string) {
+    return UserModel.findOneAndUpdate(
+      {_id: userId},
+      {$set: {readingList: []}},
+      {new: true}
+    ).populate('readingList');
+  }
 }
 
 export default UserCollection;
